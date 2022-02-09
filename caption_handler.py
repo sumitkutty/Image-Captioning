@@ -1,5 +1,7 @@
 import re
+import numpy as np
 from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 def clean_captions(img_dict):
     """Returns the dictionary with processed captions
@@ -85,3 +87,52 @@ def create_tokenizer(data_dict):
     vocab_size = len(tokenizer.word_index) + 1
 
     return tokenizer, vocab_size, caption_max_len
+
+
+
+
+
+def pad_text(text, max_length):
+    """pads 0's at the end of the vectors to have same sizes
+
+    Args:
+        text ([List]): [A single vectorized caption in sequence (List of ints)]
+        max_length ([int]): [Length of the caption with most words]
+
+    Returns:
+        [List]: [Padded caption veector]
+    """    
+    return pad_sequences([text], maxlen = max_length, padding = 'post')[0]
+
+
+
+
+def prepare_training_data(data_dict, tokenizer, max_length, vocab_size, image_files):
+    """vectorizes and pads the captions 
+
+    Args:
+        data_dict ([dict]): [Dictionary of form -> {img_name:[caption1, caption2, ..]}]
+        tokenizer ([Keras Tokenizer]): [Tokenizer used to create sequences]
+        max_length ([int]): [Length of the caption with most words]
+        vocab_size ([int]): [Size of the vocab]
+        image_files (str):  [Path to all the image files]
+
+    Returns:
+        x ([array]): [Array with all train image paths]
+        y ([array]): [Array with encoded vectorized captions for each image]
+    """    
+    x , y = list() ,list()
+    for img_name, captions in data_dict.items():
+        img_path = image_files + img_name + '.jpg'
+
+        for caption in captions:
+            #converts the text sentences to sequences of numbers where the nums are the word's index in vocab
+            words_ids = tokenizer.texts_to_sequences([caption])[0] 
+            
+            #Makes all words_ids vector of same length by padding 0's at the end(padding='post') of the vector
+            padded_ids = pad_text(words_ids,max_length)
+
+            x.append(img_path)
+            y.append(padded_ids)
+            
+    return np.array(x), np.array(y)

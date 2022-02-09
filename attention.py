@@ -1,0 +1,1 @@
+class BahdanauAttention(tf.keras.Model)
