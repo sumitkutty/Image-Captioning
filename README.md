@@ -1,4 +1,4 @@
 # Image-Captioning
 
 ## Objective
-Captioning Images with use of Attention
+Captioning Images using Attention
