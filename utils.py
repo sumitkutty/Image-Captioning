@@ -82,3 +82,18 @@ def load_image(image_path):
     return img, image_path
 
     
+
+def load_npy_files(img_name, cap):
+    """Loads the encoded image tensors from disk (npy files)
+
+    Args:
+        img_name ([tf.Tensor]): [Path to the image]
+        cap ([tf.Tensor]): [The vectorized Caption]
+
+    Returns:
+        img_tensor: [tf.Tensor]: [Encoded image tensor]
+        cap:        [tf.Tensor]: [The vectorized Caption]
+    """    
+    img_tensor = np.load(img_name.decode('utf-8') + '.npy')
+    return img_tensor, cap
+
