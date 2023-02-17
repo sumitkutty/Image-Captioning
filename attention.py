@@ -1,1 +1,2 @@
-class BahdanauAttention(tf.keras.Model)
+class BahdanauAttention(tf.keras.Model):
+    super().__init__()
